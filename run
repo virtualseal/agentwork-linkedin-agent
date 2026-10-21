@@ -1,0 +1,13 @@
+#!/bin/sh
+set -eu
+if [ "$(id -u)" != 502 ]; then
+    echo 'LinkedIn Agent must run as agentwork UID 502.' >&2
+    exit 1
+fi
+cd /Users/agentwork/apps/linkedin-agent
+if [ ! -x .venv/bin/python ]; then
+    echo 'Missing .venv; follow AGENTS.md setup instructions.' >&2
+    exit 1
+fi
+cd app
+exec ../.venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port 8000
